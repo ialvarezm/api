@@ -130,6 +130,7 @@
 			if($this->get_request_method() != "POST"){
 				$this->response('',406);
 			}
+            $id =  $_POST["data"]["id"];
 			$nombre_usuario =  $_POST["data"]["user_name"];
 			$nombre =  $_POST["data"]["name"];
 			$apellidos = $_POST["data"]["last_name"];
@@ -138,7 +139,15 @@
 			$direccion =  $_POST["data"]["address"];
 			$telefono1 =  $_POST["data"]["phone1"];
             $telefono2 =  $_POST["data"]["phone2"];
-			$query = "UPDATE `usuario` SET `user_name`='".$nombre_usuario."',`name`='".$nombre."',`last_name`='".$apellidos."',`password`='".$password."',`email`='".$email."',`address`=`".$direccion." WHERE user_name = " . $nombre_usuario;
+			$query = "UPDATE `usuario` SET `nombre_usuario`=".$nombre_usuario.",
+                                           `nombre`=".$nombre.",
+                                           `apellidos`="".$apellidos."",
+                                           `password`=".$password.",
+                                           `email`=".$email.",
+                                           `rol`="".$direccion."",
+                                           `direccion`=".$direccion.",
+                                           `telefono1`=".$telefono1.",
+                                           `telefono2`=".$telefono2." WHERE id=".$id;
 			$r = mysqli_query( $this->mysqli_connect, $query);
 			if( $r === false ) {
 				die( print_r( mysqli_error($this->mysqli_connect), true));
