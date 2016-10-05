@@ -10,7 +10,7 @@
 
     const DB_SERVER = "localhost";
 		const DB_USER = "root";
-		const DB_PASSWORD = "123456";
+		const DB_PASSWORD = "";
 		const DB = "muebleria";
 
 		private $db = NULL;
@@ -141,10 +141,10 @@
             $telefono2 =  $_POST["data"]["phone2"];
 			$query = "UPDATE `usuario` SET `nombre_usuario`=".$nombre_usuario.",
                                            `nombre`=".$nombre.",
-                                           `apellidos`="".$apellidos."",
+                                           `apellidos`=".$apellidos.",
                                            `password`=".$password.",
                                            `email`=".$email.",
-                                           `rol`="".$direccion."",
+                                           `rol`=".$direccion.",
                                            `direccion`=".$direccion.",
                                            `telefono1`=".$telefono1.",
                                            `telefono2`=".$telefono2." WHERE id=".$id;
