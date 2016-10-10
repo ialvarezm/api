@@ -10,7 +10,7 @@
 
     const DB_SERVER = "localhost";
 		const DB_USER = "root";
-		const DB_PASSWORD = "";
+		const DB_PASSWORD = '123456';
 		const DB = "muebleria";
 
 		private $db = NULL;
@@ -56,7 +56,17 @@
         $this->response('',406);
         }
 
-        $query="SELECT p.id, p.nombre, p.descripcion, p.precio, c.nombre AS categoria FROM producto p JOIN categoria c on p.categoria = c.id";
+        $query="SELECT p.id, p.nombre, p.descripcion, p.precio, c.nombre AS categoria, c.id as catId FROM producto p JOIN categoria c on p.categoria = c.id";
+
+        $this->doGet($query);
+    }
+
+    private function getCategories(){
+        if($this->get_request_method() != "GET"){
+        $this->response('',406);
+        }
+
+        $query="SELECT `id`, `nombre` FROM `categoria`";
 
         $this->doGet($query);
     }
@@ -154,6 +164,26 @@
 			}
 			$this->response("", 200);
 		}
+
+        private function updateProduct(){
+            if($this->get_request_method() != "POST"){
+                $this->response('',406);
+            }
+            $id =  $_POST["data"]["id"];
+            $nombre =  $_POST["data"]["nombre"];
+            $descripcion =  $_POST["data"]["descripcion"];
+            $precio = $_POST["data"]["precio"];
+            $categoria =  $_POST["data"]["catId"];
+            $query = "UPDATE `producto` SET `nombre`='".$nombre."',
+                             `descripcion`='".$descripcion."',
+                             `precio`=".$precio.",
+                             `categoria`=".$categoria." WHERE id=".$id;
+            $r = mysqli_query( $this->mysqli_connect, $query);
+            if( $r === false ) {
+                die( print_r( mysqli_error($this->mysqli_connect), true));
+            }
+            $this->response("", 200);
+        }
 
 
         private function addProduct(){
