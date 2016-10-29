@@ -1,19 +1,17 @@
 <?php
-
-    ini_set('display_errors',1);
-    error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
     require_once("Rest.inc.php");
     include_once "businessLogic/Product.php";
     include_once "businessLogic/User.php";
 
 	class API extends REST {
+        const DB_SERVER = "localhost";
+		const DB_USER = "root";
+		const DB_PASSWORD = '123456';
+		const DB = "muebleria";
 
 		private $mysqli_connect = NULL;
-        private $db = NULL;
 		public function __construct(){
 			parent::__construct();				// Init parent contructor
-			//$this->db = new DB();				// Initiate Database connection
-            //$this->mysqli_connect = $this->db->dbConnect();
 		}
 
 		/*
