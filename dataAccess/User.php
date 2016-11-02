@@ -50,7 +50,7 @@
             $user = $_REQUEST["user"];
             $pass = $_REQUEST["pass"];
 
-            $query="SELECT `nombre_usuario`, `nombre`, `apellidos`, `email`, `rol` FROM `usuario` WHERE nombre_usuario='" . $user . "' AND password='" . $pass . "'";
+            $query="SELECT `id`, `nombre_usuario`, `nombre`, `apellidos`, `email`, `rol` FROM `usuario` WHERE nombre_usuario='" . $user . "' AND password='" . $pass . "'";
 
             $this->db->get($query);
         }
@@ -70,7 +70,7 @@
             '".$apellidos."',
             '".$password."',
             '".$email."', 1)";
-            
+
             $this->db->post($query);
 		}
 

@@ -2,6 +2,7 @@
     require_once("Rest.inc.php");
     include_once "businessLogic/Product.php";
     include_once "businessLogic/User.php";
+    include_once "businessLogic/Order.php";
 
 	class API extends REST {
         const DB_SERVER = "localhost";

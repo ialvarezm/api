@@ -47,6 +47,22 @@
             $this->response("", 200);
         }
 
+        public function post_multiple($query) {
+            $r = mysqli_multi_query( $this->mysqli_connect, $query);
+            if ($r) {
+                do {
+                    if (($result = mysqli_store_result($this->mysqli_connect)) === false && mysqli_error($this->mysqli_connect) != '') {
+                        echo "Query failed: " . mysqli_error($this->mysqli_connect);
+                    }
+                } while (mysqli_more_results($this->mysqli_connect) && mysqli_next_result($this->mysqli_connect)); // while there are more results
+            } else {
+                echo mysqli_error($this->mysqli_connect);
+            }
+            $this->response("", 200);
+        }
+
+
+
 		public function json($data){
 			if(is_array($data)){
 				return json_encode($data);
