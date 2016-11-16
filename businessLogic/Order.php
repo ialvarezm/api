@@ -15,5 +15,27 @@
         public function saveOrder() {
             $this->daoOrder->saveOrder();
         }
+
+        /**
+        * Return entire list of products
+        */
+        public function getUserOrders(){
+            $this->daoOrder->getUserOrders();
+        }
+
+        /**
+        * Change status of the order
+        */
+        public function changeOrderStatus(){
+            $this->daoOrder->changeOrderStatus();
+        }
+
+        public function getPendingOrders(){
+            $this->daoOrder->getPendingOrders();
+        }
+
+        public function contact(){
+            $this->daoOrder->contact();
+        }
     }
 ?>

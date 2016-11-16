@@ -7,7 +7,7 @@
 	class API extends REST {
         const DB_SERVER = "localhost";
 		const DB_USER = "root";
-		const DB_PASSWORD = '123456';
+		const DB_PASSWORD = '';
 		const DB = "muebleria";
 
 		private $mysqli_connect = NULL;
@@ -27,7 +27,7 @@
 
 	}
 
-	// Initiiate Library
+	// Initiate Library
 
 	$api = new API;
 	$api->processApi();

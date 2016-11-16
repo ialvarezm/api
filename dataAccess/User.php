@@ -50,7 +50,7 @@
             $user = $_REQUEST["user"];
             $pass = $_REQUEST["pass"];
 
-            $query="SELECT `id`, `nombre_usuario`, `nombre`, `apellidos`, `email`, `rol` FROM `usuario` WHERE nombre_usuario='" . $user . "' AND password='" . $pass . "'";
+            $query="SELECT `id`, `nombre_usuario`, `nombre`, `apellidos`, `email`, `rol`, `gam` FROM `usuario` WHERE nombre_usuario='" . $user . "' AND password='" . $pass . "'";
 
             $this->db->get($query);
         }
@@ -91,8 +91,9 @@
 			$direccion =  $_POST["data"]["address"];
 			$telefono1 =  $_POST["data"]["phone1"];
             $telefono2 =  $_POST["data"]["phone2"];
+            $gam =  $_POST["data"]["gam"];
             $rol =  $_POST["data"]["rol"];
-			$query = "INSERT INTO `usuario`(`nombre_usuario`, `nombre`, `apellidos`, `password`, `email`, `rol`, `direccion`, `telefono1`, `telefono2`) VALUES
+			$query = "INSERT INTO `usuario`(`nombre_usuario`, `nombre`, `apellidos`, `password`, `email`, `rol`, `direccion`, `telefono1`, `telefono2`, `gam`) VALUES
             ('". $nombre_usuario ."',
             '". $nombre ."',
             '".$apellidos."',
@@ -100,7 +101,8 @@
             '".$email."', " . $rol ." ,
             '".$direccion."',
             '".$telefono1."',
-            '".$telefono2."')";
+            '".$telefono2."',
+            ".$gam.")";
 
             $this->db->post($query);
 		}

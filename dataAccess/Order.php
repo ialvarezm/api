@@ -24,9 +24,11 @@
             $fecha =  $orden["fecha"];
             $montoTotal =  $orden["montoTotal"];
             $usuario =  $orden["usuario"];
+            $shipping =  $orden["envio"];
             $userEmail =  $orden["userEmail"];
-			$queryOrder = "INSERT INTO factura (usuario, fecha, montoTotal, status)
-                           VALUES (".$usuario.", '".$fecha."', ".$montoTotal.", 'No entregado'); ";
+            $mysqltime = date ($fecha);
+			$queryOrder = "INSERT INTO factura (usuario, fecha, montoTotal, status, shipping)
+                           VALUES (".$usuario.", '".$mysqltime."', ".$montoTotal.", 'No Entregado', " . $shipping . "); ";
 
             $order_details = $_POST["data"]["order_details"];
             $queryDetails = "";
@@ -82,7 +84,14 @@
               </tr>';
         }
 
-        $body .= '</tbody>
+        $body .= '
+        <tr>
+            <td style="width: 100px; text-align: left;"><span style="font-size: 10pt;"><span style="font-family: tahoma, arial, helvetica, sans-serif;"><b>Envío: </b></span></span></td>
+            <td style="width: 79px; text-align: left;"><span style="font-size: 10pt;"><span style="font-family: tahoma, arial, helvetica, sans-serif;"></span></span></td>
+            <td style="width: 89px; text-align: left;"><span style="font-size: 10pt;"><span style="font-family: tahoma, arial, helvetica, sans-serif;"></span></span></td>
+            <td style="width: 76px; text-align: left;"><span style="font-size: 10pt;"><span style="font-family: tahoma, arial, helvetica, sans-serif;">$'.$orden['envio'].'</span></span></td>
+          </tr>
+          </tbody>
       </table>
       <p></p>
       <p><strong><span style="font-size: 14pt;">Total a pagar: $'.$orden["montoTotal"].'</span></strong></p>
@@ -94,18 +103,92 @@
             return $body;
         }
 
-        // /**
-        // * Return entire list of products
-        // */
-        // public function getProducts(){
-        //     if($this->get_request_method() != "GET"){
-        //         $this->response('',406);
-        //     }
-        //
-        //     $query="SELECT p.id, p.nombre, p.descripcion, p.precio, c.nombre AS categoria, c.id as catId FROM producto p JOIN categoria c on p.categoria = c.id";
-        //
-        //     $this->db->get($query);
-        // }
+        /**
+        * Return entire list of products
+        */
+        public function getUserOrders(){
+            if($this->get_request_method() != "GET"){
+                $this->response('',406);
+            }
+            $id =  $_REQUEST["user"];
+            $start = $_REQUEST["start"];
+            $limit = $_REQUEST["limit"];
+            $query="SELECT p.nombre,
+                           p.precio,
+                           p.descripcion,
+                           df.cantidad,
+                           df.monto,
+                           f.montoTotal,
+                           f.fecha,
+                           f.status,
+                           f.shipping,
+                           f.id numeroOrden
+                    FROM detalle_factura df
+                    JOIN factura f ON f.id = df.factura
+                    JOIN producto p ON p.id = df.producto
+                    WHERE f.usuario = " . $id . " LIMIT ".$start.", ".$limit;
+
+            $this->db->get($query);
+        }
+
+        /**
+        * Return entire list of pendin orders
+        */
+        public function getPendingOrders(){
+            if($this->get_request_method() != "GET"){
+                $this->response('',406);
+            }
+            $start = $_REQUEST["start"];
+            $limit = $_REQUEST["limit"];
+            // $query="SELECT p.nombre,
+            //                p.precio,
+            //                p.descripcion,
+            //                df.cantidad,
+            //                df.monto,
+            //                f.montoTotal,
+            //                f.fecha,
+            //                f.status,
+            //                f.shipping,
+            //                f.id numeroOrden,
+            //                u.nombre usuario,
+            //                u.apellidos
+            //         FROM detalle_factura df
+            //         JOIN factura f ON f.id = df.factura
+            //         JOIN producto p ON p.id = df.producto
+            //         JOIN usuario u ON u.id = f.usuario
+            //         WHERE f.status = 'No Entregado' OR f.status = 'Pago Confirmado' LIMIT " . $start . ", " . $limit;
+            $query = "SELECT * FROM factura WHERE status= 'No Entregado' OR status = 'Pago Confirmado' LIMIT " . $start . ", " . $limit;
+            $this->db->get($query);
+        }
+
+        /**
+        * Change status of the order
+        */
+        public function changeOrderStatus(){
+            if($this->get_request_method() != "POST"){
+                $this->response('',406);
+            }
+            $status =  $_REQUEST["status"];
+            $id =  $_REQUEST["id"];
+            $query="UPDATE factura SET status='".$status."' WHERE id=".$id;
+
+            $this->db->post($query);
+        }
+
+        public function contact(){
+            if($this->get_request_method() != "POST"){
+                $this->response('',406);
+            }
+            $email =  $_POST["data"]["email"];
+            $msg =  $_POST["data"]["msg"];
+            $username =  $_POST["data"]["username"];
+
+            $body = '<h2><span style="color: #23a657;">Mensaje de: ' . $username . ' - ' . $email . '</span></h2>
+                     <p style="font-size:15px">' . $msg . '</p>';
+
+            $emailinst = new Email();
+            $emailinst->sendMail('muebles.sanjose.123@gmail.com', $body, 'Comentarios de ' . $username);
+        }
         //
         // /**
         // * Return entire list of categories

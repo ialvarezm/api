@@ -28,12 +28,12 @@
             }
         }
 
-        public function sendMail($email, $body) {
+        public function sendMail($email, $body, $subject) {
             $this->initMailer();
             try{
                 $this->mail->AddAddress($email);
                 $this->mail->isHTML(true);
-                $this->mail->Subject = utf8_encode("=?UTF-8?B?" . base64_encode("Confirmación de su orden") .  "?=");
+                $this->mail->Subject = utf8_encode("=?UTF-8?B?" . base64_encode($subject ? $subject : "Confirmación de su orden") .  "?=");
                 $this->mail->msgHTML($body);
                 $this->mail->SMTPDebug = 3;
                 $this->mail->send();
@@ -45,6 +45,6 @@
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
-        }
+        }        
     }
 ?>
