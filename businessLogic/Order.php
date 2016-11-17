@@ -37,5 +37,9 @@
         public function contact(){
             $this->daoOrder->contact();
         }
+
+        public function getOrderDetails() {
+            $this->daoOrder->getOrderDetails();
+        }
     }
 ?>
