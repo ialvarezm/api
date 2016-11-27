@@ -27,6 +27,10 @@
             $this->daoUser->exportClientReport();
         }
 
+        public function getClientReport(){
+            $this->daoUser->getClientReport();
+        }
+
         /**
         * Perform login
         */

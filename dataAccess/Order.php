@@ -147,8 +147,49 @@
                              u.telefono1,
                              f.transferencia
                       FROM factura f JOIN usuario u ON u.id = f.usuario
-                      WHERE f.status= 'Pago Pendiente' OR f.status = 'Comprobación Pendiente'
+                      WHERE f.status= 'Pago Pendiente' OR f.status = 'Comprobación Pendiente' OR f.status = 'Entrega Pendiente'
                       LIMIT " . $start . ", " . $limit;
+            $this->db->get($query);
+        }
+
+
+        public function getOrderReportQuery(){
+            if($this->get_request_method() != "GET"){
+                $this->response('',406);
+            }
+            $start = isset($_REQUEST["start"]) ? $_REQUEST["start"] : '';
+            $limit = isset($_REQUEST["limit"]) ? $_REQUEST["limit"] : '';
+            $status = $_REQUEST["status"];
+            $excel = $_REQUEST["excel"];
+            $query = "SELECT f.id numeroOrden,
+                             f.fecha,
+                             f.montoTotal,
+                             f.status,
+                             f.shipping,
+                             CONCAT(u.nombre, ' ' ,u.apellidos) as usuario,
+                             u.direccion,
+                             u.telefono1,
+                             f.transferencia
+                      FROM factura f JOIN usuario u ON u.id = f.usuario
+                      WHERE f.status= '".$status."'";
+            if($excel == '0') $query .= "LIMIT " . $start . ", " . $limit;
+            return $query;
+        }
+
+        public function getOrderExcel(){
+            $query = $this->getOrderReportQuery();
+            $headers = array('Número de Orden', 'Fecha', 'Monto Total', 'Status', 'Cobro por envío', 'Cliente', 'Dirección de Envío', 'Teléfono Principal', 'N° de Transferencia Bancaria');
+            $this->db->export($query, 'Reporte de Órdenes Entregadas.xlsx', $headers, 'Reporte de Órdenes Entregadas');
+        }
+
+        public function getCancelledOrderExcel(){
+            $query = $this->getOrderReportQuery();
+            $headers = array('Número de Orden', 'Fecha', 'Monto Total', 'Status', 'Cobro por envío', 'Cliente', 'Dirección de Envío', 'Teléfono Principal');
+            $this->db->export($query, 'Reporte de Órdenes Canceladas.xlsx', $headers, 'Reporte de Órdenes Canceladas');
+        }
+
+        public function getOrderReport(){
+            $query = $this->getOrderReportQuery();
             $this->db->get($query);
         }
 

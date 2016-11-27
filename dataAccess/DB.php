@@ -40,9 +40,10 @@
             $this->response($this->json($result), 200);
         }
 
-        public function export($query, $title, $headers){
+        public function export($query, $title, $headers, $mainTitle){
             $exporter = new ExportDataExcel('browser', $title);
             $exporter->initialize();
+            $exporter->addRow(array('', '','', $mainTitle, '', '', ''));
             $exporter->addRow($headers);
             $r = mysqli_query( $this->mysqli_connect, $query);
 

@@ -25,11 +25,11 @@
             $this->db->get($query);
         }
 
-        // public function getUsers(){
-        //     $query = $this->getUsersQuery();
-        //
-        //     $this->db->get($query);
-        // }
+        public function getClientReport(){
+            $query = $this->getReportQuery();
+
+            $this->db->get($query);
+        }
 
         public function getReportQuery(){
             if($this->get_request_method() != "GET"){
@@ -51,7 +51,7 @@
         public function exportClientReport(){
             $query = $this->getReportQuery();
             $headers = array('Id', 'Nombre de Usuario', 'Nombre Completo', 'Email', 'Dirección', 'Teléfono 1', 'Área Metropolitana', 'Compras Realizadas');
-            $this->db->export($query, 'Reporte de Clientes.xlsx', $headers);
+            $this->db->export($query, 'Reporte de Clientes.xlsx', $headers, 'Reporte de Clientes');
         }
 
         /**

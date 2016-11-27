@@ -24,6 +24,36 @@
             $this->db->get($query);
         }
 
+        public function getProductReportQuery(){
+            if($this->get_request_method() != "GET"){
+                $this->response('',406);
+            }
+
+            $query="SELECT p.id,
+                    p.nombre,
+                    p.descripcion,
+                    CONCAT('$', FORMAT(p.precio, 2)) as precio,
+                    c.nombre AS categoria,
+                    (SELECT COUNT(DISTINCT factura) FROM `detalle_factura` WHERE `producto` = p.id) as ventas
+                    FROM producto p
+                    JOIN categoria c on p.categoria = c.id
+                    ORDER BY `ventas` DESC";
+
+            return $query;
+        }
+
+        public function getProductReport(){
+            $query = $this->getProductReportQuery();
+
+            $this->db->get($query);
+        }
+
+        public function getProductExcel(){
+            $query = $this->getProductReportQuery();
+            $headers = array('Id', 'Producto', 'Descripción', 'Precio', 'Categoría', 'Ventas');
+            $this->db->export($query, 'Reporte de Productos Más Vendidos.xlsx', $headers, 'Reporte de Productos Más Vendidos');
+        }
+
         /**
         * Return entire list of categories
         */
@@ -50,7 +80,7 @@
             $descripcion =  $_POST["data"]["descripcion"];
             $precio = $_POST["data"]["precio"];
             $categoria =  $_POST["data"]["catId"];
-            $photos =  isset($_POST["data"]["photos"]) ? $_POST["data"]["photos"] : array();;
+            $photos =  isset($_POST["data"]["photos"]) ? $_POST["data"]["photos"] : array();
             $queryProd = "UPDATE `producto` SET `nombre`='".$nombre."',
                              `descripcion`='".$descripcion."',
                              `precio`=".$precio.",

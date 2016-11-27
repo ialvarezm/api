@@ -48,5 +48,17 @@
         public function getOrderDetails() {
             $this->daoOrder->getOrderDetails();
         }
+
+        public function getOrderReport(){
+            $this->daoOrder->getOrderReport();
+        }
+
+        public function getOrderExcel(){
+            $this->daoOrder->getOrderExcel();
+        }
+
+        public function getCancelledOrderExcel(){
+            $this->daoOrder->getCancelledOrderExcel();
+        }
     }
 ?>

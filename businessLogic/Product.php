@@ -15,6 +15,14 @@
             $this->daoProduct->getProducts();
         }
 
+        public function getProductReport(){
+            $this->daoProduct->getProductReport();
+        }
+
+        public function getProductExcel(){
+            $this->daoProduct->getProductExcel();
+        }
+
         /**
         * Return entire list of categories
         */
