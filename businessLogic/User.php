@@ -23,6 +23,10 @@
             $this->daoUser->rol();
         }
 
+        public function exportClientReport(){
+            $this->daoUser->exportClientReport();
+        }
+
         /**
         * Perform login
         */

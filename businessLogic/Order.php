@@ -30,6 +30,13 @@
             $this->daoOrder->changeOrderStatus();
         }
 
+        /**
+        * Confirm payment
+        */
+        public function confirmPayment(){
+            $this->daoOrder->confirmPayment();
+        }
+
         public function getPendingOrders(){
             $this->daoOrder->getPendingOrders();
         }

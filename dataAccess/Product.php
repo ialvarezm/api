@@ -50,11 +50,24 @@
             $descripcion =  $_POST["data"]["descripcion"];
             $precio = $_POST["data"]["precio"];
             $categoria =  $_POST["data"]["catId"];
-            $query = "UPDATE `producto` SET `nombre`='".$nombre."',
+            $photos =  isset($_POST["data"]["photos"]) ? $_POST["data"]["photos"] : array();;
+            $queryProd = "UPDATE `producto` SET `nombre`='".$nombre."',
                              `descripcion`='".$descripcion."',
                              `precio`=".$precio.",
-                             `categoria`=".$categoria." WHERE id=".$id;
-            $this->db->post($query);
+                             `categoria`=".$categoria." WHERE id=".$id.";";
+            $queryPhotos = "";
+            if(count($photos) > 0) {
+                foreach ($photos as $photo) {
+                    if(empty($photo["id"])){
+                        $queryPhotos .= "INSERT INTO `foto`(`nombre`, `producto`, `principal`) VALUES
+                        ('".$photo["nombre"]."',".$id.",".$photo["principal"].");";
+                    }else {
+                        $queryPhotos .= "UPDATE `foto` SET `nombre`='".$photo["nombre"]."' WHERE producto=". $id." AND id=".$photo["id"].";";
+                    }
+                }
+            }
+            $query = $queryProd . $queryPhotos;
+            $this->db->post_multiple($query);
         }
 
         /**
@@ -71,13 +84,21 @@
             $descripcion =  $_POST["data"]["descripcion"];
             $precio = $_POST["data"]["precio"];
             $categoria =  $_POST["data"]["catId"];
-			$query = "INSERT INTO `producto`(`nombre`, `descripcion`, `precio`, `categoria`) VALUES
+            $photos =  $_POST["data"]["photos"];
+			$queryProd = "INSERT INTO `producto`(`nombre`, `descripcion`, `precio`, `categoria`) VALUES
             ('".$nombre."',
             '".$descripcion."',
             '".$precio."',
-            '".$categoria."')";
+            '".$categoria."');";
 
-            $this->db->post($query);
+            $last_id = "SELECT LAST_INSERT_ID() INTO @last_id;";
+            $queryPhotos = "";
+            foreach ($photos as $photo) {
+                $queryPhotos .= "INSERT INTO `foto`(`nombre`, `producto`, `principal`) VALUES
+                ('".$photo["nombre"]."',@last_id,".$photo["principal"].");";
+            }
+            $query = $queryProd . $last_id . $queryPhotos;
+            $this->db->post_multiple($query);
 		}
 
         /**
@@ -89,8 +110,34 @@
 				$this->response('',406);
 			}
 			$id =  $_REQUEST["id"];
-			$query = "DELETE FROM `producto` WHERE `id`=" . $id;
-			$this->db->post($query);
+            $photo = "DELETE FROM foto where producto=" . $id . ";";
+			$query = "DELETE FROM `producto` WHERE `id`=" . $id . ";";
+			$this->db->post_multiple($photo . $query);
+		}
+
+        /**
+        * Get Product Photos
+        */
+
+		public function getProductImages(){
+			if($this->get_request_method() != "GET"){
+				$this->response('',406);
+			}
+			$id =  $_REQUEST["id"];
+			$query = "SELECT * FROM `foto` WHERE `producto`=" . $id;
+			$this->db->get($query);
+		}
+
+        /**
+        * Get ALL Product Photos
+        */
+
+		public function getAllProductImages(){
+			if($this->get_request_method() != "GET"){
+				$this->response('',406);
+			}
+			$query = "SELECT * FROM `foto`";
+			$this->db->get($query);
 		}
     }
 ?>

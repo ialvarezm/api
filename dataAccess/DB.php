@@ -2,13 +2,14 @@
     ini_set('display_errors',1);
     error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
     require_once("Rest.inc.php");
+    require 'php-export-data.class.php';
 
     class DB extends REST{
         public $data = "";
 
         const DB_SERVER = "localhost";
         const DB_USER = "root";
-        const DB_PASSWORD = '';
+        const DB_PASSWORD = '123456';
         const DB = "muebleria";
         public $mysqli_connect = NULL;
         public function __construct(){			// Init parent contructor
@@ -34,9 +35,25 @@
             }
             $result = array();
             while( $row = mysqli_fetch_array($r, MYSQLI_ASSOC) ) {
-            array_push($result, $row);
+                array_push($result, $row);
             }
             $this->response($this->json($result), 200);
+        }
+
+        public function export($query, $title, $headers){
+            $exporter = new ExportDataExcel('browser', $title);
+            $exporter->initialize();
+            $exporter->addRow($headers);
+            $r = mysqli_query( $this->mysqli_connect, $query);
+
+            if( $r === false ) {
+                die( print_r( mysqli_error($this->mysqli_connect), true));
+            }
+            while( $row = mysqli_fetch_array($r, MYSQLI_ASSOC) ) {
+                $exporter->addRow($row);
+            }
+            $exporter->finalize();
+            exit();
         }
 
         public function post($query) {

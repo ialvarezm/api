@@ -44,5 +44,21 @@
 		public function removeProduct(){
 			$this->daoProduct->removeProduct();
 		}
+
+        /**
+        * Get Product Photos
+        */
+
+		public function getProductImages(){
+			$this->daoProduct->getProductImages();
+		}
+
+        /**
+        * Get ALL Product Photos
+        */
+
+		public function getAllProductImages(){
+			$this->daoProduct->getAllProductImages();
+		}
     }
 ?>

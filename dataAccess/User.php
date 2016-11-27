@@ -25,6 +25,35 @@
             $this->db->get($query);
         }
 
+        // public function getUsers(){
+        //     $query = $this->getUsersQuery();
+        //
+        //     $this->db->get($query);
+        // }
+
+        public function getReportQuery(){
+            if($this->get_request_method() != "GET"){
+            $this->response('',406);
+            }
+            $query="SELECT t1.id,
+                           t1.nombre_usuario,
+                           CONCAT(t1.nombre, ' ', t1.apellidos) as nombre,
+                           t1.email,
+                           t1.direccion,
+                           t1.telefono1,
+                           (CASE WHEN t1.gam = 0 THEN 'No' WHEN t1.gam = 1 THEN 'Sí' END) as gam,
+                           (SELECT COUNT(t2.id) from factura t2 WHERE t2.usuario = t1.id) as compras
+                           FROM `usuario` t1 WHERE rol = 2";
+
+            return $query;
+        }
+
+        public function exportClientReport(){
+            $query = $this->getReportQuery();
+            $headers = array('Id', 'Nombre de Usuario', 'Nombre Completo', 'Email', 'Dirección', 'Teléfono 1', 'Área Metropolitana', 'Compras Realizadas');
+            $this->db->export($query, 'Reporte de Clientes.xlsx', $headers);
+        }
+
         /**
         * Get role list
         */

@@ -28,7 +28,7 @@
             $userEmail =  $orden["userEmail"];
             $mysqltime = date ($fecha);
 			$queryOrder = "INSERT INTO factura (usuario, fecha, montoTotal, status, shipping)
-                           VALUES (".$usuario.", '".$mysqltime."', ".$montoTotal.", 'No Entregado', " . $shipping . "); ";
+                           VALUES (".$usuario.", '".$mysqltime."', ".$montoTotal.", 'Pago Pendiente', " . $shipping . "); ";
 
             $order_details = $_POST["data"]["order_details"];
             $queryDetails = "";
@@ -113,20 +113,17 @@
             $id =  $_REQUEST["user"];
             $start = $_REQUEST["start"];
             $limit = $_REQUEST["limit"];
-            $query="SELECT p.nombre,
-                           p.precio,
-                           p.descripcion,
-                           df.cantidad,
-                           df.monto,
-                           f.montoTotal,
-                           f.fecha,
-                           f.status,
-                           f.shipping,
-                           f.id numeroOrden
-                    FROM detalle_factura df
-                    JOIN factura f ON f.id = df.factura
-                    JOIN producto p ON p.id = df.producto
-                    WHERE f.usuario = " . $id . " LIMIT ".$start.", ".$limit;
+            $query = "SELECT f.id numeroOrden,
+                             f.fecha,
+                             f.montoTotal,
+                             f.status,
+                             f.shipping,
+                             f.transferencia,
+                             CONCAT(u.nombre, ' ' ,u.apellidos) as usuario,
+                             u.direccion,
+                             u.telefono1
+                      FROM factura f JOIN usuario u ON u.id = f.usuario
+                      WHERE f.usuario=" . $id ." LIMIT " . $start . ", " . $limit;
 
             $this->db->get($query);
         }
@@ -145,9 +142,12 @@
                              f.montoTotal,
                              f.status,
                              f.shipping,
-                             CONCAT(u.nombre, ' ' ,u.apellidos) as usuario
+                             CONCAT(u.nombre, ' ' ,u.apellidos) as usuario,
+                             u.direccion,
+                             u.telefono1,
+                             f.transferencia
                       FROM factura f JOIN usuario u ON u.id = f.usuario
-                      WHERE f.status= 'No Entregado' OR f.status = 'Pago Confirmado'
+                      WHERE f.status= 'Pago Pendiente' OR f.status = 'Comprobación Pendiente'
                       LIMIT " . $start . ", " . $limit;
             $this->db->get($query);
         }
@@ -162,6 +162,20 @@
             $status =  $_REQUEST["status"];
             $id =  $_REQUEST["id"];
             $query="UPDATE factura SET status='".$status."' WHERE id=".$id;
+
+            $this->db->post($query);
+        }
+
+        /**
+        * Confirm payment
+        */
+        public function confirmPayment(){
+            if($this->get_request_method() != "POST"){
+                $this->response('',406);
+            }
+            $id =  $_REQUEST["id"];
+            $transferencia =  $_REQUEST["transferencia"];
+            $query="UPDATE factura SET status='Comprobación Pendiente', transferencia=".$transferencia." WHERE id=".$id;
 
             $this->db->post($query);
         }
