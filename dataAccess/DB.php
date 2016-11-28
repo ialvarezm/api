@@ -9,7 +9,7 @@
 
         const DB_SERVER = "localhost";
         const DB_USER = "root";
-        const DB_PASSWORD = '123456';
+        const DB_PASSWORD = '';
         const DB = "muebleria";
         public $mysqli_connect = NULL;
         public function __construct(){			// Init parent contructor

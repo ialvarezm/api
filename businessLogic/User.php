@@ -15,6 +15,10 @@
             $this->daoUser->getUsers();
         }
 
+        public function getUserByName(){
+            $this->daoUser->getUserByName();
+        }
+
         /**
         * Get role list
         */

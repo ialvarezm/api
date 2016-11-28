@@ -25,6 +25,17 @@
             $this->db->get($query);
         }
 
+        public function getUserByName(){
+            if($this->get_request_method() != "GET"){
+            $this->response('',406);
+            }
+            $name =  $_REQUEST["name"];
+
+            $query="SELECT * FROM `usuario` WHERE `nombre_usuario` = '" . $name . "'";
+
+            $this->db->get($query);
+        }
+
         public function getClientReport(){
             $query = $this->getReportQuery();
 
@@ -93,12 +104,12 @@
 			$apellidos = $_POST["data"]["apellidos"];
 			$password =  $_POST["data"]["password"];
 			$email =  $_POST["data"]["email"];
-			$query = "INSERT INTO `usuario`(`nombre_usuario`, `nombre`, `apellidos`, `password`, `email`, `rol`) VALUES
+			$query = "INSERT INTO `usuario`(`nombre_usuario`, `nombre`, `apellidos`, `password`, `email`, `rol`, gam) VALUES
             ('". $nombre_usuario ."',
             '". $nombre ."',
             '".$apellidos."',
             '".$password."',
-            '".$email."', 1)";
+            '".$email."', 1, 0)";
 
             $this->db->post($query);
 		}
