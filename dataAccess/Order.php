@@ -96,7 +96,15 @@
       <p></p>
       <p><strong><span style="font-size: 14pt;">Total a pagar: $'.$orden["montoTotal"].'</span></strong></p>
       <p><strong><span style="font-size: 14pt;"></span></strong></p>
-      <p><span style="font-size: 8pt;"><strong>Recuerde hacer el depósito bancario en las siguientes 48 horas para que su compra no sea cancelada.</strong></span></p>
+      <p><span style="font-size:12pt"><strong>
+Por favor realice el depósito bancario por el monto total de la compra a cualquiera de las siguientes cuentas:
+  </strong></span></p>
+<p><span style="font-size:12pt">
+  <u><b>Banco Nacional</b></u>: 200-001-033-254578-3 <br>
+  <u><b>Banco de Costa Rica</b></u>: 200-001-052-525255-1 <br>
+<u><b>BAC San José</b></u>: 915614885 <br>
+  </span></p>
+  <p><span style="font-size:12pt">Una vez realizado el depósito, por favor diríjase a nuestro sitio web y confirme el número de transferencia bancaria en "Mis órdenes" </span></p>
     </div>
   </body>
 </html>';
